@@ -27,7 +27,7 @@ library(here)
 
 ```
 
-## 2. Data and Methods
+## 2. Data and Analysis
 
 
 ```{r}
@@ -35,3 +35,25 @@ library(here)
 bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 ```
 
+## 3. Initial Juvenile Hare Investigation
+
+### 3a. Annual juvenile hare trap counts
+```{r}
+```
+
+### 3b. Juvenile hare weight visualization
+
+
+
+### 3c. Juvenile weight comparison (male & female snowshoe hares)
+
+
+
+### 3d. Relationship between juvenile weight & hind foot length
+
+## 4. Summary of Results
+
+
+## 5. Citations
+
+Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14
