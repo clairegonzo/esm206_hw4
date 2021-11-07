@@ -10,14 +10,11 @@ output:
 
 Bonanza Creek LTER is part of the US Long Term Ecological Research Network. See more information about the site here. In this “mini exploratory report,” you will explore the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012. The data citation and link to metadata (including variable definitions) are below.
 
-
-Data citation: Kielland, K., F.S. Chapin, R.W. Ruess, and Bonanza Creek LTER. 2017. Snowshoe hare physical data in Bonanza Creek Experimental Forest: 1999-Present ver 22. Environmental Data Initiative. https://doi.org/10.6073/pasta/03dce4856d79b91557d8e6ce2cbcdc14
-
 Link to metadata: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-bnz.55.22
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # install packages
 
