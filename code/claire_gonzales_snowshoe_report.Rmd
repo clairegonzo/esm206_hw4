@@ -1,12 +1,11 @@
 ---
-title: "Task 2: Mini 'exploratory report' on juvenile snowshoe hares in Bonanza Creek Experimental Forest"
+title: "Task 2: Mini exploratory report on juvenile showshoe hares in Bonanza Creek Experimental Forest"
 author: "By: Claire Gonzales"
-date: "11/6/2021"
+date: "11/7/2021"
 output: 
   html_document: 
     theme: simplex
 ---
-
 ## 1. Project Overview
 
 Bonanza Creek LTER is part of the US Long Term Ecological Research Network. See more information about the site here. In this “mini exploratory report,” you will explore the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012. The data citation and link to metadata (including variable definitions) are below.
@@ -28,9 +27,11 @@ library(here)
 
 ```
 
-# Read in Data
+## 2. Data and Methods
+
 
 ```{r}
+# Read in raw csv file
 bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 ```
 
