@@ -38,6 +38,7 @@ bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 ## 3. Initial Juvenile Hare Investigation
 
 ### 3a. Annual juvenile hare trap counts
+  
 ```{r}
 # Count the total number of juvenile hare trappings during each year of the study
 hare_juv_year <- bonanza_hares %>% 
@@ -47,13 +48,6 @@ hare_juv_year <- bonanza_hares %>%
   group_by(year) %>% # group by year
   summarize(count = n()) # count of observations per year
 
-# Creating table
-kable(hare_juv_year,
-      align = "c",
-      booktabs = TRUE,
-      col.names = c("Year",
-                    "Count")) %>% 
-  kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
 ```{r}
@@ -70,7 +64,7 @@ ggplot(data = hare_juv_year, aes(x = year, y = count)) +
 
 ```
 
-**Figure 1.** Shows the number of juvenile showshoe hares that were captured within the Bonanza Creek Experimental Forest between the years 1999 and 2012. 
+**Figure 1.** Shows the number of juvenile snowshoe hares that were captured within the Bonanza Creek Experimental Forest between the years 1999 and 2012. 
 
 ```{r}
 # Summary statistics for in-line description
@@ -84,10 +78,12 @@ hare_juv_summary <- bonanza_hares %>%
             median_count = median(count, na.rm = TRUE),
             max_count = max(count, na.rm = TRUE),
             min_count = min(count, na.rm = TRUE),
-            sd_count = round(sd(count, na.rm = TRUE), 1))
+            sd_count = round(sd(count, na.rm = TRUE), 1),
+            total = sum(count))
 
 ```
 
+The capture data above (**Figure 1**) reflect that the amount of juvenile snowshoe hares captured was highest in the year 1999 (n = `r hare_juv_summary$max_count`) and steadily decreased over time. In total, `r hare_juv_summary$total` juvenile snowshoe hares were captured throughout the project duration (1999 - 2012) and the mean yearly capture was `r hare_juv_summary$max_count` $\pm$ `r hare_juv_summary$sd_count` (mean $\pm$ sd). However, it is important to note that this capture data is dependent on how many traps are set out. To account for this, future projects should set out the same amount of traps each year or list results as a percentage of number of hares captured per number of traps deployed annually. 
 
 ### 3b. Juvenile hare weight visualization
 
