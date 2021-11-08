@@ -1,7 +1,7 @@
 ---
 title: "Task 2: Mini exploratory report on juvenile showshoe hares in Bonanza Creek Experimental Forest"
 author: "By: Claire Gonzales"
-date: "11/7/2021"
+date: "November 10, 2021"
 output: 
   html_document: 
     theme: simplex
@@ -40,7 +40,6 @@ bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 ### 3a. Annual juvenile hare trap counts
 ```{r}
 # Count the total number of juvenile hare trappings during each year of the study
-
 hare_juv_year <- bonanza_hares %>% 
   filter(age == "j") %>% # only include observations of juvenile hares
   mutate(date = mdy(date)) %>% # lubridate() to transform date from myd forat to YYYY-MM-DD format
@@ -48,11 +47,26 @@ hare_juv_year <- bonanza_hares %>%
   group_by(year) %>% # group by year
   summarize(count = n()) # count of observations per year
 
+# Summary statistics for in-line description
+hare_juv_summary <- bonanza_hares %>% 
+  filter(age == "j") %>%
+  mutate(date = mdy(date)) %>%
+  mutate(year = year(date)) %>%
+  group_by(year) %>% 
+  summarize(count = n()) %>% 
+  summarize(mean_count = round(mean(count, na.rm = TRUE), 1),
+            median_count = median(count, na.rm = TRUE),
+            max_count = max(count, na.rm = TRUE),
+            min_count = min(count, na.rm = TRUE),
+            sd_count = round(sd(count, na.rm = TRUE), 1))
+
+
+# Creating table
 kable(hare_juv_year,
       align = "c",
       booktabs = TRUE,
       col.names = c("Year",
-                    "Hare Count")) %>% 
+                    "Count")) %>% 
   kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
