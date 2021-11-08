@@ -36,6 +36,10 @@ bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 
 ### 3a. Annual juvenile hare trap counts
 ```{r}
+# Count the total number of juvenile hare trappings during each year of the study, and create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report. 
+
+hare_juv_year <- bonanza_hares %>% 
+  filter(age == "j") # NOT DONE
 ```
 
 ### 3b. Juvenile hare weight visualization
