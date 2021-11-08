@@ -47,20 +47,6 @@ hare_juv_year <- bonanza_hares %>%
   group_by(year) %>% # group by year
   summarize(count = n()) # count of observations per year
 
-# Summary statistics for in-line description
-hare_juv_summary <- bonanza_hares %>% 
-  filter(age == "j") %>%
-  mutate(date = mdy(date)) %>%
-  mutate(year = year(date)) %>%
-  group_by(year) %>% 
-  summarize(count = n()) %>% 
-  summarize(mean_count = round(mean(count, na.rm = TRUE), 1),
-            median_count = median(count, na.rm = TRUE),
-            max_count = max(count, na.rm = TRUE),
-            min_count = min(count, na.rm = TRUE),
-            sd_count = round(sd(count, na.rm = TRUE), 1))
-
-
 # Creating table
 kable(hare_juv_year,
       align = "c",
@@ -75,7 +61,7 @@ kable(hare_juv_year,
 
 ggplot(data = hare_juv_year, aes(x = year, y = count)) +
   geom_bar(stat = "identity", aes(fill = year)) +
-  labs(title = "Annual Juvenile Hare Trap Counts Per Year (1999-2012)",
+  labs(title = "Juvenile Hare Trap Counts Per Year (1999-2012)",
        x = "Hare count",
        y = "Year",
        fill = "Year") +
@@ -83,6 +69,25 @@ ggplot(data = hare_juv_year, aes(x = year, y = count)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 ```
+
+**Figure 1.** Shows the number of juvenile showshoe hares that were captured within the Bonanza Creek Experimental Forest between the years 1999 and 2012. 
+
+```{r}
+# Summary statistics for in-line description
+hare_juv_summary <- bonanza_hares %>% 
+  filter(age == "j") %>%
+  mutate(date = mdy(date)) %>%
+  mutate(year = year(date)) %>%
+  group_by(year) %>% 
+  summarize(count = n()) %>% 
+  summarize(mean_count = round(mean(count, na.rm = TRUE), 1),
+            median_count = median(count, na.rm = TRUE),
+            max_count = max(count, na.rm = TRUE),
+            min_count = min(count, na.rm = TRUE),
+            sd_count = round(sd(count, na.rm = TRUE), 1))
+
+```
+
 
 ### 3b. Juvenile hare weight visualization
 
