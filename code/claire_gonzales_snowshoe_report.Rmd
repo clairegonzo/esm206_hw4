@@ -21,7 +21,10 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(janitor)
 library(here)
-
+library(lubridate) # for `ymd()` function
+library(broom)
+library(ggbeeswarm)
+library(kableExtra)
 ```
 
 ## 2. Data and Analysis
@@ -36,10 +39,35 @@ bonanza_hares <- read_csv(here("data", "bonanza_hares.csv"))
 
 ### 3a. Annual juvenile hare trap counts
 ```{r}
-# Count the total number of juvenile hare trappings during each year of the study, and create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report. 
+# Count the total number of juvenile hare trappings during each year of the study
 
 hare_juv_year <- bonanza_hares %>% 
-  filter(age == "j") # NOT DONE
+  filter(age == "j") %>% # only include observations of juvenile hares
+  mutate(date = mdy(date)) %>% # lubridate() to transform date from myd forat to YYYY-MM-DD format
+  mutate(year = year(date)) %>% # add a column with just the year
+  group_by(year) %>% # group by year
+  summarize(count = n()) # count of observations per year
+
+kable(hare_juv_year,
+      align = "c",
+      booktabs = TRUE,
+      col.names = c("Year",
+                    "Hare Count")) %>% 
+  kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+```{r}
+# Create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report.
+
+ggplot(data = hare_juv_year, aes(x = year, y = count)) +
+  geom_bar(stat = "identity", aes(fill = year)) +
+  labs(title = "Annual Juvenile Hare Trap Counts Per Year (1999-2012)",
+       x = "Hare count",
+       y = "Year",
+       fill = "Year") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
 ```
 
 ### 3b. Juvenile hare weight visualization
