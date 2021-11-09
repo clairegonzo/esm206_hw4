@@ -178,6 +178,28 @@ juv_hare_effsize <- cohen.d(f_hare_juve_weight, m_hare_juve_weight, na.rm = TRUE
 juv_hare_effsize # call up output
 ```
 
+```{r}
+# create table of important values
+
+hare_juv_compare <- hare_juv_weight %>% 
+  group_by(sex) %>% 
+  summarize(
+      Mean = round(mean(weight, na.rm = TRUE),1),
+      SD = round(sd(weight, na.rm = TRUE),1),
+      Count = n())
+
+kable(hare_juv_compare,
+      align = "c",
+      booktabs = TRUE,
+      col.names = c("Sex", # labeling column names with unit
+                    "Mean (g)",
+                    "Standerd Deviation (g)",
+                    "Count"),
+      caption = "**Table 1** Shows a summary statistics table for body weight distribution with respect to sex of juvenile snowshoe hares captured in Bonanza Creek Experimental Forest between the years 1999 and 2012") %>% 
+   kable_styling(bootstrap_options = "striped", full_width = FALSE)
+```
+
+
 ### 3d. Relationship between juvenile weight & hind foot length
 
 
