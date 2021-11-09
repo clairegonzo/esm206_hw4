@@ -130,7 +130,7 @@ The data above (**Figure 2**) reflects that the body mass (g) measurements of ma
 
 ### 3c. Juvenile weight comparison (male & female snowshoe hares)
 
-*Further compare mean weights for juvenile male and female snowshoe hares included in this study.*
+
 ```{r, include=FALSE}
 # statistics for in-line description
 
@@ -172,6 +172,8 @@ median_f <- round(median(f_hare_juve_weight, na.rm = TRUE),2)
 sd_m <- round(sd(m_hare_juve_weight),2)
 sd_f <- round(sd(f_hare_juve_weight, na.rm = TRUE),2)
 
+mean_diff <- mean_m - mean_f
+
 # calculate effect size
 juv_hare_effsize <- cohen.d(f_hare_juve_weight, m_hare_juve_weight, na.rm = TRUE)
 
@@ -199,6 +201,7 @@ kable(hare_juv_compare,
    kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
+The body weight (g) distribution of female and male juvenile snowshoe hares depicted in **Table 1** 
 
 ### 3d. Relationship between juvenile weight & hind foot length
 
