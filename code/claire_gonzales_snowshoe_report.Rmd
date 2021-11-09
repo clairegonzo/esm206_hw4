@@ -51,30 +51,29 @@ hare_juv_year <- bonanza_hares %>%
 ```
 
 ```{r}
-# Create a finalized data visualization of the counts by year. Include a figure caption below the figure in your report.
+# Create a finalized data visualization of the counts by year.
 
-ggplot(data = hare_juv_year, aes(x = year, y = count)) +
-  geom_bar(stat = "identity", aes(fill = year)) +
-  labs(title = "Juvenile Hare Trap Counts Per Year (1999-2012)",
-       x = "Hare count",
+ggplot(data = hare_juv_year, aes(x = year, y = count)) + # setting up ggplot
+  geom_bar(stat = "identity", aes(fill = year)) + # color coding for year
+  labs(x = "Hare count", # axis and main labels
        y = "Year",
        fill = "Year") +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) # centering title
 
 ```
 
-**Figure 1.** Shows the number of juvenile snowshoe hares that were captured within the Bonanza Creek Experimental Forest between the years 1999 and 2012. 
+**Figure 1.** Number of juvenile snowshoe hares that were captured within the Bonanza Creek Experimental Forest between the years 1999 and 2012. (Data: Kielland et. al., 2017)
 
-```{r}
+```{r, include = FALSE}
 # Summary statistics for in-line description
-hare_juv_summary <- bonanza_hares %>% 
+hare_juv_summary <- bonanza_hares %>% # running a summary statistics from original data
   filter(age == "j") %>%
-  mutate(date = mdy(date)) %>%
-  mutate(year = year(date)) %>%
+  mutate(date = mdy(date)) %>% # updating date format
+  mutate(year = year(date)) %>% # include a column with year only
   group_by(year) %>% 
-  summarize(count = n()) %>% 
-  summarize(mean_count = round(mean(count, na.rm = TRUE), 1),
+  summarize(count = n()) %>% # total observations by year
+  summarize(mean_count = round(mean(count, na.rm = TRUE), 1), # create a table based on those counts of observations per year
             median_count = median(count, na.rm = TRUE),
             max_count = max(count, na.rm = TRUE),
             min_count = min(count, na.rm = TRUE),
@@ -83,17 +82,89 @@ hare_juv_summary <- bonanza_hares %>%
 
 ```
 
+
 The capture data above (**Figure 1**) reflect that the amount of juvenile snowshoe hares captured was highest in the year 1999 (n = `r hare_juv_summary$max_count`) and steadily decreased over time. In total, `r hare_juv_summary$total` juvenile snowshoe hares were captured throughout the project duration (1999 - 2012) and the mean yearly capture was `r hare_juv_summary$max_count` $\pm$ `r hare_juv_summary$sd_count` (mean $\pm$ sd). However, it is important to note that this capture data is dependent on how many traps are set out. To account for this, future projects should set out the same amount of traps each year or list results as a percentage of number of hares captured per number of traps deployed annually. 
 
 ### 3b. Juvenile hare weight visualization
 
 
+```{r}
+hare_juv_weight <- bonanza_hares %>% # exploratory
+  filter(age == "j") %>%
+  mutate(date = mdy(date)) %>% 
+  mutate(year = year(date)) %>% 
+  mutate(grid = case_when( # updating site names (column grid) to have capitalization
+    grid == "bonbs" ~ "Bonbs",
+    grid == "bonmat" ~ "Bonmat",
+    grid == "bonrip" ~ "Bonrip")) %>% 
+  mutate(sex = case_when(
+    sex == "f" ~ "Female",
+    sex == "m" ~ "Male",
+    sex == "NA" ~ "N/A"))
+
+
+ggplot(data = hare_juv_weight, aes(x = grid, y = weight)) + # beeswarm plot with box plot , facet wrapped by sex
+  geom_beeswarm(aes(color = grid)) +
+  scale_color_manual(values = c("goldenrod2","cyan4","coral")) +
+  geom_boxplot(fill = NA, width = 0.3, outlier.color = NA) +
+  stat_summary(fun=mean, 
+               geom="point", 
+               shape=20, 
+               size=3, 
+               color="black", 
+               fill="black") +
+  facet_grid(~sex) +
+  labs(x = "Site",
+       y = "Body mass (g)",
+       color = "Site") +
+  theme_minimal() +
+  theme(panel.spacing = unit(2, "lines"))
+
+```
+
+**Figure 2.** Comparisons of body mass values (grams) juvenile snowshoe hares captured at Bonanza Creek Experimental Forest between the years 1999 and 2012. Female snowshoe hares are in left pane, followed by male snowshoe hares (middle pane) and hares for which sex was not collected (right pane). Each pane contains body mass measurements for juvenile snowshoe hares captures at each site (Bonbs, Bonmat, and Bonrip). Capture observations from each site are further described with a box plot. The box's middle black line represents the median values, while the outsides of the box represent the 25th and 75th percentile values. The black dot represents the mean value of observations. (Data: Kielland et. al., 2017)
+
+  
+The data above (**Figure 2**) reflects that the body mass (g) measurements of male juvenile snowshoe hares had slightly larger mean and median values compared to those measurements made for female juvenile snowshoe hares. In general, these data contain very few outliers, with only one positive outlier for female observations at the Bonrip site and one negative outlier for male observations at the Bonbs site. Notably, the heaviest snowshoe hares for both male and female measurements were captured at the Bonrip site. Conversely, the highest mean and median values were in the Bonbs site across sexes. Few hares could not be sexed and all of those observations (NA; right pane) were constrained to Bonmat and Bonrip sites.
 
 ### 3c. Juvenile weight comparison (male & female snowshoe hares)
 
 
+```{r, include=FALSE}
+# statistics for in-line description
+
+f_hare_juve_weight <- hare_juv_weight %>% # creating a vecctor for female body mass values
+  filter(sex == "Female") %>% 
+  pull(weight) # the pull() part makes a vector of the values
+
+m_hare_juve_weight <- hare_juv_weight %>% # creating a vector for male body mass values
+  filter(sex == "Male") %>% 
+  pull(weight)
+
+
+# Exploratory histograms and QQ plots to check assumptions
+hist(f_hare_juve_weight) 
+# Looks normal
+
+qqnorm(f_hare_juve_weight) 
+# Looks linear
+
+hist(m_hare_juve_weight) 
+# A little skewed negatively
+
+qqnorm(m_hare_juve_weight)
+# Looks fairly linear
+
+# Based on these exploratory tests, we can assume normality of the data and conduct a t test
+
+hare_juv_weigth_ttest <- t.test(f_hare_juve_weight, m_hare_juve_weight)
+
+hare_juv_weigth_ttest # call up output
+
+```
 
 ### 3d. Relationship between juvenile weight & hind foot length
+
 
 ## 4. Summary of Results
 
