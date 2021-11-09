@@ -25,6 +25,7 @@ library(lubridate) # for `ymd()` function
 library(broom)
 library(ggbeeswarm)
 library(kableExtra)
+library(effsize)
 ```
 
 ## 2. Data and Analysis
@@ -129,7 +130,7 @@ The data above (**Figure 2**) reflects that the body mass (g) measurements of ma
 
 ### 3c. Juvenile weight comparison (male & female snowshoe hares)
 
-
+*Further compare mean weights for juvenile male and female snowshoe hares included in this study.*
 ```{r, include=FALSE}
 # statistics for in-line description
 
@@ -161,6 +162,20 @@ hare_juv_weigth_ttest <- t.test(f_hare_juve_weight, m_hare_juve_weight)
 
 hare_juv_weigth_ttest # call up output
 
+
+# other summary stats needed
+
+mean_m <- round(mean(m_hare_juve_weight),2)
+mean_f <- round(mean(f_hare_juve_weight, na.rm = TRUE),2)
+median_m <- round(median(m_hare_juve_weight),2)
+median_f <- round(median(f_hare_juve_weight, na.rm = TRUE),2)
+sd_m <- round(sd(m_hare_juve_weight),2)
+sd_f <- round(sd(f_hare_juve_weight, na.rm = TRUE),2)
+
+# calculate effect size
+juv_hare_effsize <- cohen.d(f_hare_juve_weight, m_hare_juve_weight, na.rm = TRUE)
+
+juv_hare_effsize # call up output
 ```
 
 ### 3d. Relationship between juvenile weight & hind foot length
