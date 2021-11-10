@@ -257,11 +257,21 @@ juvenile_cor_tidy <- tidy(juvenile_cor)
 juvenile_cor_tidy
 ```
 
-The relationship between snowshoe hare body mass (g) and hind foot length (mm) is fairly linear across sex and site (**Figure 3.**). In exploring this more, the simple linear regression reflected that hare body mass loosely predicts length of hind foot (p < 0.001, R^2^ = `r round(juvenile_lm_glance$r.squared,3)`). If all other factors remain constant, on average we would expect hind foot length to increase by `r round(juvenile_lm_tidy$estimate[2],3)`mm per 1g increase in body mass (slope = `r round(juvenile_lm_tidy$estimate[2],3)`mm/g). Body mass (g) and hind foot length (mm) of juvenile snowshoe hares have medium positive and significant coorelation (Pearson's *r* = `r round(juvenile_cor_tidy$estimate,2)`, p < 0.001). Lastly, diagnostic plots (not included) revealed normally distributed residuals, but residuals were fairly heteroscedastic. This is a concern in using this linear regression to draw conclusions about the population.
+The relationship between snowshoe hare body mass (g) and hind foot length (mm) is fairly linear across sex and site (**Figure 3.**). In exploring this more, the simple linear regression reflected that hare body mass loosely predicts length of hind foot (p < 0.001, R^2^ = `r round(juvenile_lm_glance$r.squared,3)`). If all other factors remain constant, on average we would expect hind foot length to increase by `r round(juvenile_lm_tidy$estimate[2],3)`mm per 1g increase in body mass (slope = `r round(juvenile_lm_tidy$estimate[2],3)`mm/g). Body mass (g) and hind foot length (mm) of juvenile snowshoe hares have medium-positive and significant coorelation (Pearson's *r* = `r round(juvenile_cor_tidy$estimate,2)`, p < 0.001). Lastly, diagnostic plots (not included) revealed normally distributed residuals, but residuals were fairly heteroscedastic. This is a concern in using this linear regression to draw conclusions about the population.
 
 ## 4. Summary of Results
 
 This initial exploration of the data reflected the following results:
+
+- The amount of juvenile snowshoe hares captured was highest in the first year of the project (1999) and has decreased over time.
+- Male juvenile snowshoe hares weigh more than females do, across all sites and with very few outliers. The difference is significant, but the effect size is small.
+- The relationship between body mass and hind foot length of juvenile snowshoe hares is medium-positively and positively correlated. Therefore, if all other factors remain constant, on average we would expect hind foot length to increase by `r round(juvenile_lm_tidy$estimate[2],3)`mm per 1g increase in body mass.
+
+Next steps:
+
+- Standardize data across all years that hares were captured to determine how many hares were captured compared to the amount of attempts made.
+- Investigate multiple linear regressions that could describe how body mass and other potential variables (e.g. sex or site) could impact hind foot length.
+- Alternately, select more focused variables to remove heteroscedasticity in linear regression model.
 
 
 ## 5. Citations
