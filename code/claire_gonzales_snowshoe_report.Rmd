@@ -90,7 +90,7 @@ The capture data above (**Figure 1**) reflect that the amount of juvenile snowsh
 
 
 ```{r}
-hare_juv_weight <- bonanza_hares %>% # exploratory
+hare_juv_weight <- bonanza_hares %>% 
   filter(age == "j") %>%
   mutate(date = mdy(date)) %>% 
   mutate(year = year(date)) %>% 
@@ -205,8 +205,64 @@ The body weight (g) distribution of female and male juvenile snowshoe hares depi
 
 ### 3d. Relationship between juvenile weight & hind foot length
 
+```{r, include=FALSE}
+juv_foot_weight <- hare_juv_weight %>% #Messed up! (overwrite later)
+  group_by(hindft, weight) %>% 
+  summarize(hindft = hindft,
+            weight = weight)
+```
+
+```{r}
+ggplot(data = hare_juv_weight, aes(x = hindft, y = weight)) + #Initial visualization of hind foot length and weight of hare
+  geom_point() +
+  labs( x = "Hind foot length (mm)",
+        y = "Body mass (g)") +
+  theme_minimal() # figure 3
+```
+**Figure 3** Visualization of initial relationship between body mass (g) with hind leg length (mm) of juvenile snowshow hares captured in Bonanza Creek Experimental Forest between the years 1999 and 2012. (Data: Kielland et. al., 2017)
+
+```{r}
+# Assessing liner regression to describe how juvenile snowshoe hare weight changes with respect to hind foot length.
+#First, explore assumptions
+
+# Creating vectors
+juv_weight <- hare_juv_weight %>% 
+  pull(weight)
+juv_hindft <-hare_juv_weight %>% 
+  pull(hindft)
+
+#test normality
+hist(juv_weight) #pretty normal
+qqnorm(juv_weight) #pretty straight
+hist(juv_hindft) #less normal
+qqnorm(juv_hindft) #somewhat straight
+
+# running linear model
+juvenile_lm <- lm(hindft ~ weight, data = hare_juv_weight)
+juvenile_lm # call up value
+
+#tidy and glance versions of linear regression
+juvenile_lm_tidy <- tidy(juvenile_lm)
+juvenile_lm_tidy # call up value
+
+juvenile_lm_glance <- glance(juvenile_lm)
+juvenile_lm_glance # call up value
+
+plot(juvenile_lm)
+
+# pearson's r
+juvenile_cor <- cor.test(hare_juv_weight$weight, hare_juv_weight$hindft)
+juvenile_cor # call up value
+
+#tidy 
+juvenile_cor_tidy <- tidy(juvenile_cor)
+juvenile_cor_tidy
+```
+ blah blah `r juvenile_cor_tidy$estimate`
 
 ## 4. Summary of Results
+
+This initial exploration of the data reflected the following results:
 
 
 ## 5. Citations
