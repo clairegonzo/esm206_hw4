@@ -4,16 +4,19 @@ author: "By: Claire Gonzales"
 date: "November 10, 2021"
 output: 
   html_document: 
-    theme: simplex
+    theme: lumen
 ---
 ## 1. Project Overview
 
-Bonanza Creek LTER is part of the US Long Term Ecological Research Network. See more information about the site here. In this “mini exploratory report,” you will explore the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012. The data citation and link to metadata (including variable definitions) are below.
-
-Link to metadata: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-bnz.55.22
+Bonanza Creek LTER is part of the US Long Term Ecological Research Network. See more information about the site here. In this “mini exploratory report,” you will explore the counts and sizes of juvenile snowshoe hares recorded from 1998 - 2012. 
 
 
-```{r setup, include=FALSE}
+
+## 2. Data and Analysis
+
+Full metadata can be found at the following URL: https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-bnz.55.22
+
+```{r setup, include=FALSE, message = FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # install packages
@@ -26,9 +29,8 @@ library(broom)
 library(ggbeeswarm)
 library(kableExtra)
 library(effsize)
-```
 
-## 2. Data and Analysis
+```
 
 
 ```{r}
@@ -55,10 +57,10 @@ hare_juv_year <- bonanza_hares %>%
 # Create a finalized data visualization of the counts by year.
 
 ggplot(data = hare_juv_year, aes(x = year, y = count)) + # setting up ggplot
-  geom_bar(stat = "identity", aes(fill = year)) + # color coding for year
+  geom_bar(stat = "identity", fill = "steelblue3") + # color coding for year
   labs(x = "Hare count", # axis and main labels
        y = "Year",
-       fill = "Year") +
+       fill = none) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) # centering title
 
@@ -160,7 +162,8 @@ qqnorm(m_hare_juve_weight)
 
 hare_juv_weigth_ttest <- t.test(f_hare_juve_weight, m_hare_juve_weight)
 
-hare_juv_weigth_ttest # call up output
+hare_juv_weigth_ttest_tidy <- tidy(hare_juv_weigth_ttest) #make it tidy
+hare_juv_weigth_ttest_tidy # call up output
 
 
 # other summary stats needed
@@ -197,31 +200,25 @@ kable(hare_juv_compare,
                     "Mean (g)",
                     "Standerd Deviation (g)",
                     "Count"),
-      caption = "**Table 1** Shows a summary statistics table for body weight distribution with respect to sex of juvenile snowshoe hares captured in Bonanza Creek Experimental Forest between the years 1999 and 2012") %>% 
+      caption = "**Table 1** Shows a summary statistics table for body weight distribution with respect to sex of juvenile snowshoe hares captured in Bonanza Creek Experimental Forest between the years 1999 and 2012. (Data: Kielland et. al., 2017)") %>% 
    kable_styling(bootstrap_options = "striped", full_width = FALSE)
 ```
 
-The body weight (g) distribution of female and male juvenile snowshoe hares depicted in **Table 1** 
+The body weight (g) distribution of female (n = `r hare_juv_compare$Count[1]`) and male (n = `r hare_juv_compare$Count[2]`) juvenile snowshoe hares depicted in **Table 1**. The difference in means between weights of male and female snowshoe hares is `r mean_diff` (g), with a small effect size (Cohen's *d* = `r juv_hare_effsize[3]`). Despite this, the difference in means is significant (Welch's two-sample t-test: t(`r round(hare_juv_weigth_ttest_tidy$parameter,2)` = `r round(hare_juv_weigth_ttest_tidy$estimate,2)`, p = `r round(hare_juv_weigth_ttest_tidy$p.value,3)`).
 
 ### 3d. Relationship between juvenile weight & hind foot length
 
-```{r, include=FALSE}
-juv_foot_weight <- hare_juv_weight %>% #Messed up! (overwrite later)
-  group_by(hindft, weight) %>% 
-  summarize(hindft = hindft,
-            weight = weight)
-```
-
 ```{r}
-ggplot(data = hare_juv_weight, aes(x = hindft, y = weight)) + #Initial visualization of hind foot length and weight of hare
+ggplot(data = hare_juv_weight, aes(x = weight, y = hindft)) + #Initial visualization of hind foot length and weight of hare
   geom_point() +
-  labs( x = "Hind foot length (mm)",
-        y = "Body mass (g)") +
+  labs( x = "Body mass (g)" ,
+        y = "Hind foot length (mm)") +
   theme_minimal() # figure 3
 ```
+
 **Figure 3** Visualization of initial relationship between body mass (g) with hind leg length (mm) of juvenile snowshow hares captured in Bonanza Creek Experimental Forest between the years 1999 and 2012. (Data: Kielland et. al., 2017)
 
-```{r}
+```{r, include = FALSE}
 # Assessing liner regression to describe how juvenile snowshoe hare weight changes with respect to hind foot length.
 #First, explore assumptions
 
@@ -248,7 +245,8 @@ juvenile_lm_tidy # call up value
 juvenile_lm_glance <- glance(juvenile_lm)
 juvenile_lm_glance # call up value
 
-plot(juvenile_lm)
+# plot(juvenile_lm)
+# (formatting so this doesnt show up in knitted doc)
 
 # pearson's r
 juvenile_cor <- cor.test(hare_juv_weight$weight, hare_juv_weight$hindft)
@@ -258,7 +256,8 @@ juvenile_cor # call up value
 juvenile_cor_tidy <- tidy(juvenile_cor)
 juvenile_cor_tidy
 ```
- blah blah `r juvenile_cor_tidy$estimate`
+
+The relationship between snowshoe hare body mass (g) and hind foot length (mm) is fairly linear across sex and site (**Figure 3.**). In exploring this more, the simple linear regression reflected that hare body mass loosely predicts length of hind foot (p < 0.001, R^2^ = `r round(juvenile_lm_glance$r.squared,3)`). If all other factors remain constant, on average we would expect hind foot length to increase by `r round(juvenile_lm_tidy$estimate[2],3)`mm per 1g increase in body mass (slope = `r round(juvenile_lm_tidy$estimate[2],3)`mm/g). Body mass (g) and hind foot length (mm) of juvenile snowshoe hares have medium positive and significant coorelation (Pearson's *r* = `r round(juvenile_cor_tidy$estimate,2)`, p < 0.001). Lastly, diagnostic plots (not included) revealed normally distributed residuals, but residuals were fairly heteroscedastic. This is a concern in using this linear regression to draw conclusions about the population.
 
 ## 4. Summary of Results
 
